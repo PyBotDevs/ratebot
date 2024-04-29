@@ -150,27 +150,11 @@ async def banner(ctx: ApplicationContext, image_url: str = None):
 # User Commands
 @client.user_command(name="View Profile")
 async def _profile(ctx: ApplicationContext, user: discord.User):
-    localembed = discord.Embed(
-        title=f"{user.display_name}'s profile",
-        description=f"{user.name}",
-        color=discord.Color.random()
-    )
-    localembed.set_thumbnail(url=user.display_avatar)
-    localembed.add_field(name="Profile Picture URL", value=f"[Click to view]({user.display_avatar})")
-    localembed.add_field(name="Joined Discord at", value=f"{user.created_at.strftime('%d %B, %Y')}")
-    localembed.add_field(name="User id", value=user.id)
-    localembed.add_field(name="Rating", value=f"{str(parse_rating(user.id))} stars")
-    if profile_metadata[str(user.id)]["profile_banner_url"] is not None:
-        localembed.set_image(url=profile_metadata[str(user.id)]["profile_banner_url"])
-    await ctx.respond(embed=localembed)
+    await profile(ctx, user)
 
 @client.user_command(name="View Rating")
-async def rating(ctx: ApplicationContext, user: discord.User):
-    localembed = discord.Embed(
-        description=f":star: {user.name} has been rated {str(parse_rating(user.id))} stars",
-        color=color
-    )
-    await ctx.respond(embed=localembed)
+async def _rating(ctx: ApplicationContext, user: discord.User):
+    await rating(ctx, user)
 
 # Bot Initialization
 try:

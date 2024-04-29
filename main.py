@@ -131,9 +131,9 @@ async def rating(ctx: ApplicationContext, user: discord.User = None):
     await ctx.respond(embed=localembed)
 
 # User Profile Customization Commands
-# customization = discord.commands.SlashCommandGroup("customize", "Commands used to customize the user's /profile command.")  Disable because command doesn't sync with this
+customization = client.slash_group("customize", "Commands used to customize the user's /profile command.")
 
-@client.slash_command(
+@customization.command(
     name="profile_banner",
     description="Set a banner to display on your /profile command! (url only)"
 )

@@ -149,6 +149,7 @@ async def banner(ctx: ApplicationContext, image_url: str = None):
     if (image_url is not None) and ("https://" not in image_url):
         return await ctx.respond("Your custom banner url must contain `https://`!", ephemeral=True)
     profile_metadata[str(ctx.author.id)]["profile_banner_url"] = image_url
+    save()
     if image_url is None: localembed = discord.Embed(description=":white_check_mark: Your custom profile banner has been successfully removed.", color=discord.Color.green())
     else: localembed = discord.Embed(description=":white_check_mark: Your custom profile banner has been successfully set! Check it out using `/profile`.", color=discord.Color.green())
     return await ctx.respond(embed=localembed)

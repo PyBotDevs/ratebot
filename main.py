@@ -26,11 +26,13 @@ with open("db/profiles.json", 'r') as f: profile_metadata = json.load(f)
 
 # Pre-initialization Commands
 def save() -> int:
+    """Dumps the latest cached data of all databases to local storage."""
     with open("db/user_ratings.json", 'w+') as f: json.dump(user_ratings, f, indent=4)
     with open("db/profiles.json", 'w+') as f: json.dump(profile_metadata, f, indent=4)  # TODO: Uncomment this line once full profile metadata support is ready
     return 0
 
 def parse_rating(user_id: Union[int, str]) -> int:
+    """Parses all the ratings of a specified user, and returns an aggregated rating as `float`."""
     users_rated = []
     for user in user_ratings[str(user_id)].keys():
         users_rated.append(user)
@@ -53,6 +55,7 @@ async def on_ready():
 
 @client.event
 async def on_message(ctx):
+    """Fired whenever someone sends a new rating in a server."""
     if str(ctx.author.id) not in user_ratings: user_ratings[str(ctx.author.id)] = {}
     if str(ctx.author.id) not in profile_metadata: profile_metadata[str(ctx.author.id)] = {"profile_banner_url": None}
     save()
@@ -63,6 +66,7 @@ async def on_message(ctx):
     description="Need some command help?"
 )
 async def _help(ctx: ApplicationContext):
+    """Need some command help?"""
     parsed_desc = ""
     for command in commands_db:
         parsed_desc += f"\n\n**{commands_db[command]['name']}**: {commands_db[command]['description']}\nFormat: /{command}{commands_db[command]['args']}"
@@ -80,6 +84,7 @@ async def _help(ctx: ApplicationContext):
 @option(name="user", description="The person you want to rate", type=discord.User)
 @option(name="rating", description="The rating you want to give to the user", type=str, choices=["1 star", "2 stars", "3 stars", "4 stars", "5 stars"])
 async def rate(ctx: ApplicationContext, user: discord.User, rating: str):
+    """Rate a user of your choice."""
     if str(ctx.author.id) not in user_ratings: user_ratings[str(ctx.author.id)] = {}
     if rating not in ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"]: return
     if rating == "1 star": rating_int = 1
@@ -102,6 +107,7 @@ async def rate(ctx: ApplicationContext, user: discord.User, rating: str):
 )
 @option(name="user", description="The user you want to view", type=discord.User, default=None)
 async def profile(ctx: ApplicationContext, user: discord.User = None):
+    """View the profile of a user."""
     if user == None: user = ctx.author
     localembed = discord.Embed(
         title=f"{user.display_name}'s profile",
@@ -123,6 +129,7 @@ async def profile(ctx: ApplicationContext, user: discord.User = None):
 )
 @option(name="user", description="The user you want to view", type=discord.User, default=None)
 async def rating(ctx: ApplicationContext, user: discord.User = None):
+    """View a user's rating."""
     if user == None: user = ctx.author
     localembed = discord.Embed(
         description=f":star: {user.name} has been rated {str(parse_rating(user.id))} stars",

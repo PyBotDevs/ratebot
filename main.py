@@ -2,6 +2,7 @@
 import discord
 import json
 import os
+from colors import Colors as colors
 from typing import Union
 from discord import option, ApplicationContext
 from discord.ext import commands
@@ -11,14 +12,18 @@ client = discord.Bot()
 color = discord.Color.random()
 
 # Check for Databases and Autogenerate them
-if not os.path.isdir("db"): os.mkdir("db")
+if not os.path.isdir("db"):
+    print(f"[main/Startup] {colors.yellow}Database directory appears to be missing.{colors.end} Creating directory...")
+    os.mkdir("db")
 if not os.path.isfile("db/profiles.json"):
+    print(f"[main/Startup] {colors.yellow}\"profiles.json\" database appears to be missing.{colors.end} Creating database...")
     with open("db/profiles.json", 'x', encoding="utf-8") as f: json.dump({}, f)
 if not os.path.isfile("db/user_ratings.json"):
+    print(f"[main/Startup] {colors.yellow}\"user_ratings.json\" database appears to be missing.{colors.end} Creating database...")
     with open("db/user_ratings.json", 'x', encoding="utf-8") as f: json.dump({}, f)
 
 # Load Databases
-print("[client/startup] Populating databases...")
+print("[main/Startup] Populating databases...")
 with open("db/user_ratings.json", 'r') as f: user_ratings = json.load(f)
 with open("config/commands.json", 'r') as f: commands_db = json.load(f)
 with open("db/profiles.json", 'r') as f: profile_metadata = json.load(f)
@@ -48,8 +53,8 @@ def parse_rating(user_id: Union[int, str]) -> float:
 # Events
 @client.event
 async def on_ready():
-    print(f"[client] Discord bot user logged in as {client.user.name}")
-    print("[client] Ready to accept commands.")
+    print(f"[main/Client] {colors.green}Discord bot user logged in as {client.user.name}{colors.end}")
+    print(f"[main/Client] {colors.green}Ready to accept commands.{colors.end}")
     print("-------------")
 
 @client.event
@@ -186,14 +191,14 @@ try:
     if auth_config["deploy_mode"] == "replit": client.run(os.getenv["TOKEN"])
     if auth_config["deploy_mode"] == "local":
         if auth_config["TOKEN"] == "": 
-            print("Unable to deploy client: You have not added a bot token yet. Add one first in 'TOKEN' in 'config/auth.json'.")
-            print("You can get a bot token from https://discord.com/developers by creating a new application.")
+            print(f"[main/Startup] {colors.orange}Unable to deploy client: You have not added a bot token yet. Add one first in 'TOKEN' in 'config/auth.json'.{colors.end}")
+            print("[main/Startup] You can get a bot token from https://discord.com/developers by creating a new application.")
             raise SystemExit
         print("[main/Startup] Initializing bot client...")
         client.run(auth_config["TOKEN"])
 except KeyError:
-    print("Unable to deploy client: Your configuration file is likely corrupted. Please reinstall the bot.")
+    print(f"{colors.red}[main/Startup] Unable to deploy client: Your configuration file is likely corrupted. Please reinstall the bot.{colors.end}")
     raise SystemExit
 except Exception as error:
-    print(f"An error occured when trying to deploy the client.\nError Info:\n   {type(error).__name__}\n   {error}")
+    print(f"{colors.red}[main/Startup] An error occured when trying to deploy the client.\nError Info:\n   {type(error).__name__}\n   {error}{colors.end}")
     raise SystemExit

@@ -15,12 +15,11 @@ color = discord.Color.random()
 if not os.path.isdir("db"):
     print(f"[main/Startup] {colors.yellow}Database directory appears to be missing.{colors.end} Creating directory...")
     os.mkdir("db")
-if not os.path.isfile("db/profiles.json"):
-    print(f"[main/Startup] {colors.yellow}\"profiles.json\" database appears to be missing.{colors.end} Creating database...")
-    with open("db/profiles.json", 'x', encoding="utf-8") as f: json.dump({}, f)
-if not os.path.isfile("db/user_ratings.json"):
-    print(f"[main/Startup] {colors.yellow}\"user_ratings.json\" database appears to be missing.{colors.end} Creating database...")
-    with open("db/user_ratings.json", 'x', encoding="utf-8") as f: json.dump({}, f)
+databases = ["profiles.json", "user_ratings.json"]
+for database in databases:
+    if not os.path.isfile(f"db/{database}"):
+        print(f"[main/Startup] {colors.yellow}\"{database}\" database appears to be missing.{colors.end} Creating database...")
+        with open(f"db/{database}", 'x', encoding="utf-8") as f: json.dump({}, f)
 
 # Load Databases
 print("[main/Startup] Populating databases...")

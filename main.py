@@ -2,7 +2,6 @@
 import discord
 import json
 import os
-from time import strftime
 from typing import Union
 from discord import option, ApplicationContext
 from discord.ext import commands

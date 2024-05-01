@@ -192,7 +192,7 @@ try:
     if auth_config["deploy_mode"] == "local":
         if auth_config["TOKEN"] == "": 
             print(f"[main/Startup] {colors.orange}Unable to deploy client: You have not added a bot token yet. Add one first in 'TOKEN' in 'config/auth.json'.{colors.end}")
-            print("[main/Startup] You can get a bot token from https://discord.com/developers by creating a new application.")
+            print(f"[main/Startup] {colors.cyan}You can get a bot token from https://discord.com/developers by creating a new application.{colors.end}")
             raise SystemExit
         print("[main/Startup] Initializing bot client...")
         client.run(auth_config["TOKEN"])

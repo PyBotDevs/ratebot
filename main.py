@@ -30,7 +30,7 @@ def save() -> int:
     with open("db/profiles.json", 'w+') as f: json.dump(profile_metadata, f, indent=4)  # TODO: Uncomment this line once full profile metadata support is ready
     return 0
 
-def parse_rating(user_id: Union[int, str]) -> int:
+def parse_rating(user_id: Union[int, str]) -> float:
     users_rated = []
     for user in user_ratings[str(user_id)].keys():
         users_rated.append(user)

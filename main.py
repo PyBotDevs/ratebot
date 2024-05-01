@@ -140,7 +140,7 @@ async def rating(ctx: ApplicationContext, user: discord.User = None):
     await ctx.respond(embed=localembed)
 
 # User Profile Customization Commands
-customization = client.slash_group("customize", "Commands used to customize the user's /profile command.")
+customization = client.create_group("customize", "Commands used to customize the user's /profile command.")
 
 @customization.command(
     name="profile_banner",

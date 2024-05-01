@@ -56,7 +56,10 @@ async def on_ready():
 async def on_message(ctx):
     """Fired whenever someone sends a new rating in a server."""
     if str(ctx.author.id) not in user_ratings: user_ratings[str(ctx.author.id)] = {}
-    if str(ctx.author.id) not in profile_metadata: profile_metadata[str(ctx.author.id)] = {"profile_banner_url": None}
+    if str(ctx.author.id) not in profile_metadata: profile_metadata[str(ctx.author.id)] = {
+        "profile_description": "",
+        "profile_banner_url": None
+    }
     save()
 
 # Slash Commands
@@ -110,7 +113,7 @@ async def profile(ctx: ApplicationContext, user: discord.User = None):
     if user == None: user = ctx.author
     localembed = discord.Embed(
         title=f"{user.display_name}'s profile",
-        description=f"{user.name}",
+        description=f"`AKA` {user.name}\n\n*{profile_metadata[str(user.id)]['profile_description']}*",
         color=discord.Color.random()  # Removed user.accent_color from embed color because PyCord can't behave :(
     )
     localembed.set_thumbnail(url=user.display_avatar)
@@ -153,6 +156,19 @@ async def banner(ctx: ApplicationContext, image_url: str = None):
     if image_url is None: localembed = discord.Embed(description=":white_check_mark: Your custom profile banner has been successfully removed.", color=discord.Color.green())
     else: localembed = discord.Embed(description=":white_check_mark: Your custom profile banner has been successfully set! Check it out using `/profile`.", color=discord.Color.green())
     return await ctx.respond(embed=localembed)
+
+@customization.command(
+    name="profile_description",
+    description="Set a custom description for your /profile command!"
+)
+@option(name="description", description="The text you want to set as your profile description.", type=str, default="")
+async def profile_description(ctx: ApplicationContext, description: str = ""):
+    """Set a custom description for your /profile command!"""
+    profile_metadata[str(ctx.author.id)]["profile_description"] = description
+    save()
+    if description == "": localembed = discord.Embed(description=":white_check_mark: Your profile description has successfully been removed.", color=discord.Color.green())
+    else: localembed = discord.Embed(description=":white_check_mark: Your profile description has been successfully set! Check it out using `/profile`.", color=discord.Color.green())
+    await ctx.respond(embed=localembed)
 
 # User Commands
 @client.user_command(name="View Profile")

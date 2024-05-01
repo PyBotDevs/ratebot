@@ -1,4 +1,4 @@
-"""Library used for stdout colors."""
+"""Library used for returning stdout colors. (terminal color codes)"""
 
 class Colors:
     """Contains general stdout colors."""

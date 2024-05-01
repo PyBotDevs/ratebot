@@ -111,10 +111,11 @@ async def rate(ctx: ApplicationContext, user: discord.User, rating: str):
 async def profile(ctx: ApplicationContext, user: discord.User = None):
     """View the profile of a user."""
     if user == None: user = ctx.author
+    profile_desc = profile_metadata[str(user.id)]["profile_description"]
     localembed = discord.Embed(
         title=f"{user.display_name}'s profile",
-        description=f"`AKA` {user.name}\n\n*{profile_metadata[str(user.id)]['profile_description']}*",
-        color=discord.Color.random()  # Removed user.accent_color from embed color because PyCord can't behave :(
+        description=f"`AKA` {user.name}\n\n{f'*{profile_desc}*' if profile_desc != '' else ''}",
+        color=discord.Color.random()
     )
     localembed.set_thumbnail(url=user.display_avatar)
     localembed.add_field(name="Profile Picture URL", value=f"[Click to view]({user.display_avatar})")

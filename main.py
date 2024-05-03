@@ -50,12 +50,12 @@ def parse_rating(user_id: Union[int, str]) -> float:
     return aggregated_rating
 
 def get_custom_color(user_id: Union[int, str]) -> int:
-    """Fetches the custom theme color of the specified user id as base 16 `int`.\n\nReturns `None` if user has no custom color set."""
+    """Fetches the custom theme color of the specified user id as base 16 `int`.\n\nReturns `discord.Embed.Empty` if user has no custom color set."""
     theme_color = profile_metadata[str(user_id)]["profile_theme_color"]
     if theme_color is not None:
         theme_color = int(theme_color, 16)
     else:
-        theme_color = discord.Color.default()
+        theme_color = discord.Embed.Empty
     return theme_color
 
 # Events

@@ -199,12 +199,12 @@ async def profile_color(ctx: ApplicationContext, hex_code: str = None):
         cleaned_hex_code = hex_code.lower().replace("#", "")
 
         # Checking hex code validity
-        if len(cleaned_hex_code) != 3 or len(cleaned_hex_code) != 6:  # Character length should either be 3 or 6
-            return await ctx.respond(":x: **Incorrectly Formatted Hex Code:** Your hex color code must either be 3 or 6 characters long!")
-        if any(c not in 'abcdef0123456789' for c in cleaned_hex_code):  # Only letters a, b, c, d, e, f should be in the hex color code
-            return await ctx.respond(":x: **Incorrectly Formatted Hex Code:** Your hex color code must only contain letters from `a` to `f`!")
-        if any(c in '`~!@$%^&*()-_=+[{]}\|;:\'",<.>/?' for c in cleaned_hex_code):  # The hex color code cannot contain any special symbols except #
+        if not len(cleaned_hex_code) == 6:  # Character length should either be 6
+            return await ctx.respond(":x: **Incorrectly Formatted Hex Code:** Your hex color code must either be 6 characters long!")
+        elif any(c in '`~!@$%^&*()-_=+[{]}\|;:\'",<.>/?' for c in cleaned_hex_code):  # The hex color code cannot contain any special symbols except #
             return await ctx.respond(":x: **Incorrectly Formatted Hex Code:** Your hex color cannot contain any special symbols except `#`!")
+        elif any(c not in 'abcdef0123456789' for c in cleaned_hex_code):  # Only letters a, b, c, d, e, f should be in the hex color code
+            return await ctx.respond(":x: **Incorrectly Formatted Hex Code:** Your hex color code must only contain letters from `a` to `f`!")
 
         final_hex_code = f"0x{cleaned_hex_code}"
 

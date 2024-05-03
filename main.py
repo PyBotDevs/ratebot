@@ -185,6 +185,26 @@ async def profile_description(ctx: ApplicationContext, description: str = ""):
     else: localembed = discord.Embed(description=":white_check_mark: Your profile description has been successfully set! Check it out using `/profile`.", color=discord.Color.green())
     await ctx.respond(embed=localembed)
 
+@customization.command(
+    name="profile_color",
+    description="Set a custom theme color for your /profile command!"
+)
+@option(name="hex_code", description="The hex code for your custom color", type=str, default=None)
+async def profile_color(ctx: ApplicationContext, hex_code: str = None):
+    """Set a custom theme color for your /profile command!"""
+    final_hex_code = None
+
+    # Cleaning hex code
+    if hex_code is not None:
+        cleaned_hex_code = hex_code.lower().replace("#", "")
+        final_hex_code = f"0x{cleaned_hex_code}"
+
+    profile_metadata[str(ctx.author.id)]["profile_theme_color"] = final_hex_code
+    save()
+    if hex_code is None: localembed = discord.Embed(description=":white_check_mark: Your profile theme color has successfully been removed.", color=discord.Color.green())
+    else: localembed = discord.Embed(description=":white_check_mark: Your profile theme color has been successfully set! Check it out using `/profile`.", color=discord.Color.green())
+    await ctx.respond(embed=localembed)
+
 # User Commands
 @client.user_command(name="View Profile")
 async def _profile(ctx: ApplicationContext, user: discord.User):

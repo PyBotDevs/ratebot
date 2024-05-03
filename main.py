@@ -49,6 +49,15 @@ def parse_rating(user_id: Union[int, str]) -> float:
     aggregated_rating = round(total_stars/number_of_ratings, 1)
     return aggregated_rating
 
+def get_custom_color(user_id: Union[int, str]) -> int:
+    """Fetches the custom theme color of the specified user id as base 16 `int`.\n\nReturns `None` if user has no custom color set."""
+    theme_color = profile_metadata[str(user_id)]["profile_theme_color"]
+    if theme_color is not None:
+        theme_color = int(theme_color, 16)
+    else:
+        theme_color = discord.Color.default()
+    return theme_color
+
 # Events
 @client.event
 async def on_ready():
@@ -62,7 +71,8 @@ async def on_message(ctx):
     if str(ctx.author.id) not in user_ratings: user_ratings[str(ctx.author.id)] = {}
     if str(ctx.author.id) not in profile_metadata: profile_metadata[str(ctx.author.id)] = {
         "profile_description": "",
-        "profile_banner_url": None
+        "profile_banner_url": None,
+        "profile_theme_color": None
     }
     save()
 

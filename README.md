@@ -1,6 +1,7 @@
 <h1 align='center'>RateBot, A simple user rating bot for Discord.</h1>
 
 ![LICENSE](https://img.shields.io/github/license/PyBotDevs/ratebot)
+[![CodeFactor](https://www.codefactor.io/repository/github/pybotdevs/ratebot/badge)](https://www.codefactor.io/repository/github/pybotdevs/ratebot)
 ![Stars](https://img.shields.io/github/stars/PyBotDevs/ratebot)
 [![Discord](https://img.shields.io/discord/880409977074888714?color=%235865F2&label=Discord&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/b5pz8T6Yjr)
 

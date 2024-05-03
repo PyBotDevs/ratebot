@@ -129,7 +129,7 @@ async def profile(ctx: ApplicationContext, user: discord.User = None):
     localembed = discord.Embed(
         title=f"{user.display_name}'s profile",
         description=f"`AKA` {user.name}\n\n{f'*{profile_desc}*' if profile_desc != '' else ''}",
-        color=discord.Color.random()
+        color=get_custom_color(user.id)
     )
     localembed.set_thumbnail(url=user.display_avatar)
     localembed.add_field(name="Profile Picture URL", value=f"[Click to view]({user.display_avatar})")
@@ -150,7 +150,7 @@ async def rating(ctx: ApplicationContext, user: discord.User = None):
     if user == None: user = ctx.author
     localembed = discord.Embed(
         description=f":star: {user.name} has been rated {str(parse_rating(user.id))} stars",
-        color=color
+        color=get_custom_color(user.id)
     )
     await ctx.respond(embed=localembed)
 

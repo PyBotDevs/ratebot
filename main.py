@@ -49,6 +49,15 @@ def parse_rating(user_id: Union[int, str]) -> float:
     aggregated_rating = round(total_stars/number_of_ratings, 1)
     return aggregated_rating
 
+def get_custom_color(user_id: Union[int, str]) -> int:
+    """Fetches the custom theme color of the specified user id as base 16 `int`.\n\nReturns `discord.Embed.Empty` if user has no custom color set."""
+    theme_color = profile_metadata[str(user_id)]["profile_theme_color"]
+    if theme_color is not None:
+        theme_color = int(theme_color, 16)
+    else:
+        theme_color = discord.Embed.Empty
+    return theme_color
+
 # Events
 @client.event
 async def on_ready():
@@ -62,7 +71,8 @@ async def on_message(ctx):
     if str(ctx.author.id) not in user_ratings: user_ratings[str(ctx.author.id)] = {}
     if str(ctx.author.id) not in profile_metadata: profile_metadata[str(ctx.author.id)] = {
         "profile_description": "",
-        "profile_banner_url": None
+        "profile_banner_url": None,
+        "profile_theme_color": None
     }
     save()
 
@@ -119,7 +129,7 @@ async def profile(ctx: ApplicationContext, user: discord.User = None):
     localembed = discord.Embed(
         title=f"{user.display_name}'s profile",
         description=f"`AKA` {user.name}\n\n{f'*{profile_desc}*' if profile_desc != '' else ''}",
-        color=discord.Color.random()
+        color=get_custom_color(user.id)
     )
     localembed.set_thumbnail(url=user.display_avatar)
     localembed.add_field(name="Profile Picture URL", value=f"[Click to view]({user.display_avatar})")
@@ -140,7 +150,7 @@ async def rating(ctx: ApplicationContext, user: discord.User = None):
     if user == None: user = ctx.author
     localembed = discord.Embed(
         description=f":star: {user.name} has been rated {str(parse_rating(user.id))} stars",
-        color=color
+        color=get_custom_color(user.id)
     )
     await ctx.respond(embed=localembed)
 
@@ -173,6 +183,35 @@ async def profile_description(ctx: ApplicationContext, description: str = ""):
     save()
     if description == "": localembed = discord.Embed(description=":white_check_mark: Your profile description has successfully been removed.", color=discord.Color.green())
     else: localembed = discord.Embed(description=":white_check_mark: Your profile description has been successfully set! Check it out using `/profile`.", color=discord.Color.green())
+    await ctx.respond(embed=localembed)
+
+@customization.command(
+    name="profile_color",
+    description="Set a custom theme color for your /profile command!"
+)
+@option(name="hex_code", description="The hex code for your custom color", type=str, default=None)
+async def profile_color(ctx: ApplicationContext, hex_code: str = None):
+    """Set a custom theme color for your /profile command!"""
+    final_hex_code = None
+
+    # Cleaning hex code
+    if hex_code is not None:
+        cleaned_hex_code = hex_code.lower().replace("#", "")
+
+        # Checking hex code validity
+        if not len(cleaned_hex_code) == 6:  # Character length should either be 6
+            return await ctx.respond(":x: **Incorrectly Formatted Hex Code:** Your hex color code must either be 6 characters long!")
+        elif any(c in '`~!@$%^&*()-_=+[{]}\|;:\'",<.>/?' for c in cleaned_hex_code):  # The hex color code cannot contain any special symbols except #
+            return await ctx.respond(":x: **Incorrectly Formatted Hex Code:** Your hex color cannot contain any special symbols except `#`!")
+        elif any(c not in 'abcdef0123456789' for c in cleaned_hex_code):  # Only letters a, b, c, d, e, f should be in the hex color code
+            return await ctx.respond(":x: **Incorrectly Formatted Hex Code:** Your hex color code must only contain letters from `a` to `f`!")
+
+        final_hex_code = f"0x{cleaned_hex_code}"
+
+    profile_metadata[str(ctx.author.id)]["profile_theme_color"] = final_hex_code
+    save()
+    if hex_code is None: localembed = discord.Embed(description=":white_check_mark: Your profile theme color has successfully been removed.", color=discord.Color.green())
+    else: localembed = discord.Embed(description=":white_check_mark: Your profile theme color has been successfully set! Check it out using `/profile`.", color=discord.Color.green())
     await ctx.respond(embed=localembed)
 
 # User Commands

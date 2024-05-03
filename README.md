@@ -10,10 +10,12 @@ RateBot is a simple Discord bot made with Python with the PyCord library. This b
 You can also customize and personalize your profile with custom profile user theme colors, profile descriptions and banners!
 
 ## Feature Previews
-*User Profile And Customization*
+- *User Profile And Customization*
+
 ![image](https://github.com/PyBotDevs/ratebot/assets/72265661/a8ed112c-7d63-4ae0-9568-29bc1e7d99bd)
 
-*User Rating*
+- *User Rating*
+
 ![image](https://github.com/PyBotDevs/ratebot/assets/72265661/979c356b-98a4-43d2-adb9-1c05289cbe99)
 
 ## Want to Try RateBot?
